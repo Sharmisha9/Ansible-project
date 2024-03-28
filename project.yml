@@ -1,0 +1,36 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Start nginx
+      service:
+        name: nginx
+        state: started
+
+    - name: Transfer dist folder to remote
+      synchronize:
+        src: /var/www/html/upsf/dist
+        dest: /var/www/html/upsf
+        recursive: yes
+        delete: yes
+
+    - name: Transfer Nginx configuration file
+      copy:
+        src: /etc/nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify: Reload Nginx
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
+
