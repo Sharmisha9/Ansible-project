@@ -1,0 +1,8 @@
+all:
+  children:
+    webservers:
+      hosts:
+        web1:
+          ansible_host: 144.24.131.91
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: ~/.ssh/ssh-key-2024-01-17.key
